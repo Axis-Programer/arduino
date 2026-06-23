@@ -1,0 +1,183 @@
+/* --- VARIABLES --- */
+:root {
+    --bg: #f2f2f2;
+    --card-bg: #ffffff;
+    --text: #222222;
+    --accent: #111111;
+    --btn-on: #e8ffe8;
+    --btn-off: #ffe8e8;
+    --shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0f1115;
+        --card-bg: #181b22;
+        --text: #f5f5f5;
+        --accent: #f5f5f5;
+        --btn-on: #163822;
+        --btn-off: #3a1818;
+        --shadow: 0 8px 24px rgba(0,0,0,0.6);
+    }
+}
+
+/* --- GLOBAL --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    margin: 0;
+    padding: 32px 16px 40px;
+    text-align: center;
+    color: var(--text);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+h1 {
+    font-weight: 500;
+    margin-bottom: 24px;
+}
+
+/* --- CONNECT BUTTON --- */
+#connectBtn {
+    padding: 12px 28px;
+    border: none;
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 15px;
+    border-radius: 999px;
+    cursor: pointer;
+    margin-bottom: 32px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+#connectBtn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+#connectBtn:active {
+    transform: translateY(1px) scale(0.97);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.35);
+}
+
+/* --- GRID --- */
+.grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* --- CARDS --- */
+.card {
+    background: var(--card-bg);
+    padding: 24px 20px 22px;
+    width: 230px;
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+}
+
+.card h2 {
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+/* --- LEDS --- */
+.led {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    margin: 0 auto 16px auto;
+    background: #777;
+    box-shadow: 0 0 6px rgba(0,0,0,0.3);
+    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.led.on {
+    background: #2ecc71;
+    box-shadow: 0 0 14px #2ecc71;
+    animation: pulse 1.2s infinite ease-in-out;
+}
+
+.led.off {
+    background: #e74c3c;
+    box-shadow: 0 0 10px #e74c3c88;
+}
+
+/* --- LED ANIMATION --- */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.12); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* --- BUTTONS (HOMEKIT STYLE) --- */
+button {
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.15s ease, background 0.25s ease;
+}
+
+/* Botones de relé */
+.action-btn {
+    width: 100%;
+    padding: 11px 14px;
+    margin: 6px 0;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+.action-btn svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.onBtn {
+    background: var(--btn-on);
+}
+
+.offBtn {
+    background: var(--btn-off);
+}
+
+.action-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.action-btn:active {
+    transform: translateY(1px) scale(0.97);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 600px) {
+    body {
+        padding: 24px 12px 32px;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 320px;
+    }
+}

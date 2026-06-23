@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Control de Relés</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Control de Relés</h1>
+
+<button id="connectBtn" onclick="connect()">Conectar Arduino</button>
+
+<div class="grid">
+
+    <div class="card">
+        <h2>Relé 1</h2>
+        <div id="led1" class="led off"></div>
+
+        <button class="action-btn onBtn" onclick="send('ON1')">
+            <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="#27ae60" stroke-width="2"/>
+                <path d="M9 12.5L11 14.5L15 9.5" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Encender</span>
+        </button>
+
+        <button class="action-btn offBtn" onclick="send('OFF1')">
+            <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="#c0392b" stroke-width="2"/>
+                <path d="M9 9L15 15M15 9L9 15" stroke="#c0392b" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Apagar</span>
+        </button>
+    </div>
+
+    <div class="card">
+        <h2>Relé 2</h2>
+        <div id="led2" class="led off"></div>
+
+        <button class="action-btn onBtn" onclick="send('ON2')">
+            <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="#27ae60" stroke-width="2"/>
+                <path d="M9 12.5L11 14.5L15 9.5" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Encender</span>
+        </button>
+
+        <button class="action-btn offBtn" onclick="send('OFF2')">
+            <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="#c0392b" stroke-width="2"/>
+                <path d="M9 9L15 15M15 9L9 15" stroke="#c0392b" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Apagar</span>
+        </button>
+    </div>
+
+    <div class="card">
+        <h2>Global</h2>
+        <div class="led" style="background:#888;"></div>
+
+        <button class="action-btn onBtn" onclick="send('ALL_ON')">
+            <svg viewBox="0 0 24 24" fill="none">
+                <rect x="5" y="7" width="14" height="10" rx="3" stroke="#27ae60" stroke-width="2"/>
+                <path d="M9 12.5L11 14.5L15 9.5" stroke="#27ae60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Encender todos</span>
+        </button>
+
+        <button class="action-btn offBtn" onclick="send('ALL_OFF')">
+            <svg viewBox="0 0 24 24" fill="none">
+                <rect x="5" y="7" width="14" height="10" rx="3" stroke="#c0392b" stroke-width="2"/>
+                <path d="M9 9L15 15M15 9L9 15" stroke="#c0392b" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Apagar todos</span>
+        </button>
+    </div>
+
+</div>
+
+<script>
+let port;
+let writer;
+
+async function connect() {
+    port = await navigator.serial.requestPort();
+    await port.open({ baudRate: 9600 });
+    writer = port.writable.getWriter();
+    document.getElementById("connectBtn").innerText = "Conectado";
+
+    readLoop();
+}
+
+async function send(cmd) {
+    if (!writer) return alert("Conecta el Arduino primero");
+    const data = new TextEncoder().encode(cmd + "\n");
+    await writer.write(data);
+}
+
+async function readLoop() {
+    const reader = port.readable.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        const text = decoder.decode(value).trim();
+
+        if (text === "STATE1_ON") setLed("led1", true);
+        if (text === "STATE1_OFF") setLed("led1", false);
+
+        if (text === "STATE2_ON") setLed("led2", true);
+        if (text === "STATE2_OFF") setLed("led2", false);
+    }
+}
+
+function setLed(id, state) {
+    const el = document.getElementById(id);
+    el.className = "led " + (state ? "on" : "off");
+}
+</script>
+
+</body>
+</html>
